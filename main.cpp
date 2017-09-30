@@ -17,7 +17,9 @@ double** parsePoints(list<string> strPoints)
     string strNodes[2];
     for (string strPoint : strPoints)
     {
-        strNodes[2] = {"", ""};
+        strNodes[0].clear(); //Tried clearing entire array but didn't work
+        strNodes[1].clear();
+
         for (char& c : strPoint)
         {
             if (c == ',')
@@ -32,11 +34,13 @@ double** parsePoints(list<string> strPoints)
         double* node = new double[dim2Length];
         node[0] = stod(strNodes[0]);
         node[1] = stod(strNodes[1]);
-        
+
         points[pointIndex++] = node;
 
         nodeIndex = 0;
     }
+
+
 
     return points;
 }
@@ -58,6 +62,8 @@ double** csvToMultiDim(string fileName, int *nrP)
         else
             tempStr += c;
     }
+
+    *nrP = unprocessedPoints.size();
 
     return parsePoints(unprocessedPoints);
 }
@@ -111,9 +117,8 @@ double* gradientDescentRunner(double **points, int nrPoints, double startingB, d
 int main()
 {
     string csvPath = "./data.csv";
-    int *nrP;
-    double **points = csvToMultiDim(csvPath, nrP);
-    int nrPoints = *nrP;
+    int nrPoints;
+    double **points = csvToMultiDim(csvPath, &nrPoints);
     printf("%d", nrPoints);
     /* double learningRate = 0.0001;
     double initialB = 0;
