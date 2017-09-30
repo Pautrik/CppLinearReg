@@ -3,12 +3,47 @@
 #include <cmath>
 #include <streambuf>
 #include <string>
+#include <list>
 
 using namespace std;
 
-double** csvToArr(string fileName, int *nrP)
+double** parsePoints(list<string> strPoints)
 {
-    ifstream t(filename);
+    int dim1Length = strPoints.size(); //Antalet noder
+    int dim2Length = 2;
+    double** points = new double*[dim1Length];
+    int nodeIndex = 0;
+    int pointIndex = 0;
+    string strNodes[2];
+    for (string strPoint : strPoints)
+    {
+        strNodes[2] = {"", ""};
+        for (char& c : strPoint)
+        {
+            if (c == ',')
+            {
+                nodeIndex = 1;
+            }
+            else
+            {
+                strNodes[nodeIndex] += c;
+            }
+        }
+        double* node = new double[dim2Length];
+        node[0] = stod(strNodes[0]);
+        node[1] = stod(strNodes[1]);
+        
+        points[pointIndex++] = node;
+
+        nodeIndex = 0;
+    }
+
+    return points;
+}
+
+double** csvToMultiDim(string fileName, int *nrP)
+{
+    ifstream t(fileName);
     string str((istreambuf_iterator<char>(t)), (istreambuf_iterator<char>()));
     list<string> unprocessedPoints;
     
@@ -23,27 +58,12 @@ double** csvToArr(string fileName, int *nrP)
         else
             tempStr += c;
     }
+
+    return parsePoints(unprocessedPoints);
 }
 
-double** parsePoints(list<string> strPoints)
-{
-    double** points = new double*[];
-    string strNodes[] = {"", ""};
-    int nodeIndex = 0;
-    for (string strPoint : strPoints)
-    {
-        for (char& c : strPoint)
-        {
-            if (c == ',')
-            nodeIndex = 1;
-            else
-            strNodes[nodeIndex] += c;
-        }
-        nodeIndex = 0;
-    }
-}
 
-double computeErrorForLineGivenPoints(double b, double m, double **points, int nrPoints)
+/* double computeErrorForLineGivenPoints(double b, double m, double **points, int nrPoints)
 {
     int totalError = 0;
     for (int i = 0; i < nrPoints; i++)
@@ -86,15 +106,16 @@ double* gradientDescentRunner(double **points, int nrPoints, double startingB, d
     double valueList[2] = { b, m };
 
     return valueList;
-}
+} */
 
 int main()
 {
     string csvPath = "./data.csv";
     int *nrP;
-    double **points = csvToArr(csvPath, nrP);
+    double **points = csvToMultiDim(csvPath, nrP);
     int nrPoints = *nrP;
-    double learningRate = 0.0001;
+    printf("%d", nrPoints);
+    /* double learningRate = 0.0001;
     double initialB = 0;
     double initialM = 0;
     int numIterations = 1000;
@@ -105,6 +126,6 @@ int main()
     double *finalVars = gradientDescentRunner(points, nrPoints, initialB, initialM, learningRate, numIterations);
     
     printf("After %d iterations b = %f, m = %f, error = %f", numIterations, finalVars[0], finalVars[1], computeErrorForLineGivenPoints(finalVars[0], finalVars[1], points, nrPoints));
-
+ */
     return 0;
 }
