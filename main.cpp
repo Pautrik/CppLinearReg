@@ -69,7 +69,7 @@ double** csvToMultiDim(string fileName, int *nrP)
 }
 
 
-/* double computeErrorForLineGivenPoints(double b, double m, double **points, int nrPoints)
+double computeErrorForLineGivenPoints(double b, double m, double **points, int nrPoints)
 {
     int totalError = 0;
     for (int i = 0; i < nrPoints; i++)
@@ -95,7 +95,9 @@ double* stepGradient(double bCurrent, double mCurrent, double **points, int nrPo
     }
     double newB = bCurrent - learningRate * bGradient;
     double newM = mCurrent - learningRate * mGradient;
-    double valueList[2] = { newB, newM };
+    double *valueList = new double[2];
+    valueList[0] = newB;
+    valueList[1] = newM;
 
     return valueList;
 }
@@ -109,28 +111,31 @@ double* gradientDescentRunner(double **points, int nrPoints, double startingB, d
         b = sg[0];
         m = sg[1];
     }
-    double valueList[2] = { b, m };
+
+    double* valueList = new double[2];
+    valueList[0] = b;
+    valueList[1] = m;
 
     return valueList;
-} */
+}
 
 int main()
 {
     string csvPath = "./data.csv";
     int nrPoints;
     double **points = csvToMultiDim(csvPath, &nrPoints);
-    printf("%d", nrPoints);
-    /* double learningRate = 0.0001;
+    printf("%d\n", nrPoints);
+    double learningRate = 0.0001;
     double initialB = 0;
     double initialM = 0;
     int numIterations = 1000;
 
-    printf("Starting gradient descent at b = %f, m = %f, error = %f", initialB, initialM, computeErrorForLineGivenPoints(initialB, initialM, points, nrPoints));
-    printf("Running...");
+    printf("Starting gradient descent at b = %f, m = %f, error = %f\n", initialB, initialM, computeErrorForLineGivenPoints(initialB, initialM, points, nrPoints));
+    printf("Running...\n");
 
     double *finalVars = gradientDescentRunner(points, nrPoints, initialB, initialM, learningRate, numIterations);
     
-    printf("After %d iterations b = %f, m = %f, error = %f", numIterations, finalVars[0], finalVars[1], computeErrorForLineGivenPoints(finalVars[0], finalVars[1], points, nrPoints));
- */
+    printf("After %d iterations b = %f, m = %f, error = %f\n", numIterations, finalVars[0], finalVars[1], computeErrorForLineGivenPoints(finalVars[0], finalVars[1], points, nrPoints));
+
     return 0;
 }
