@@ -40,8 +40,6 @@ double** parsePoints(list<string> strPoints)
         nodeIndex = 0;
     }
 
-
-
     return points;
 }
 
@@ -110,6 +108,8 @@ double* gradientDescentRunner(double **points, int nrPoints, double startingB, d
         double *sg = stepGradient(b, m, points, nrPoints, learningRate);
         b = sg[0];
         m = sg[1];
+
+        delete[] sg;
     }
 
     double* valueList = new double[2];
@@ -124,7 +124,6 @@ int main()
     string csvPath = "./data.csv";
     int nrPoints;
     double **points = csvToMultiDim(csvPath, &nrPoints);
-    printf("%d\n", nrPoints);
     double learningRate = 0.0001;
     double initialB = 0;
     double initialM = 0;
@@ -135,7 +134,12 @@ int main()
 
     double *finalVars = gradientDescentRunner(points, nrPoints, initialB, initialM, learningRate, numIterations);
     
-    printf("After %d iterations b = %f, m = %f, error = %f\n", numIterations, finalVars[0], finalVars[1], computeErrorForLineGivenPoints(finalVars[0], finalVars[1], points, nrPoints));
+    printf("After %d iterations on %d nodes: b = %f, m = %f, error = %f\n", numIterations, nrPoints, finalVars[0], finalVars[1], computeErrorForLineGivenPoints(finalVars[0], finalVars[1], points, nrPoints));
+    
+    for (int i = 0; i < nrPoints; i++)
+        delete[] points[i];
+
+    delete[] points;
 
     return 0;
 }
