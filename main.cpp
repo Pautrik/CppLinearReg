@@ -113,8 +113,8 @@ double* gradientDescentRunner(double **points, int nrPoints, double startingB, d
     }
 
     double* valueList = new double[2];
-    valueList[0] = b;
-    valueList[1] = m;
+    valueList[0] = m;
+    valueList[1] = b;
 
     return valueList;
 }
@@ -134,7 +134,7 @@ int main()
 
     double *finalVars = gradientDescentRunner(points, nrPoints, initialB, initialM, learningRate, numIterations);
     
-    printf("After %d iterations on %d nodes: b = %f, m = %f, error = %f\n", numIterations, nrPoints, finalVars[0], finalVars[1], computeErrorForLineGivenPoints(finalVars[0], finalVars[1], points, nrPoints));
+    printf("After %d iterations on %d nodes: m = %f, b = %f, error = %f\n", numIterations, nrPoints, finalVars[0], finalVars[1], computeErrorForLineGivenPoints(finalVars[0], finalVars[1], points, nrPoints));
     
     for (int i = 0; i < nrPoints; i++)
         delete[] points[i];
